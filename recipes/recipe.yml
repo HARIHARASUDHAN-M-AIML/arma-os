@@ -1,7 +1,7 @@
 name: arma-os
 description: "ARMA OS - Mac-level Security with Android Features"
 
-base-image: ghcr.io/ublue-os/kinoite-nvidia-open
+base-image: ghcr.io/ublue-os/kinoite-main
 image-version: latest
 
 modules:
