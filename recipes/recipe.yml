@@ -1,25 +1,38 @@
 name: arma-os
-description: "ARMA OS - Mac-level Security with Android Features"
+description: "ARMA OS - AI/ML & High-Security PC Workstation"
 
 base-image: ghcr.io/ublue-os/kinoite-main
 image-version: latest
 
 modules:
+  # 1. Official ARMA OS Branding, Custom Shield Logo & Fortress Security Rules
   - type: script
     snippets:
       - 'sed -i "s/NAME=.*/NAME=\"ARMA OS\"/" /usr/lib/os-release'
-      - 'sed -i "s/PRETTY_NAME=.*/PRETTY_NAME=\"ARMA OS 1.0 (Aegis Edition)\"/" /usr/lib/os-release'
+      - 'sed -i "s/PRETTY_NAME=.*/PRETTY_NAME=\"ARMA OS 1.0 (AI-ML Workstation)\"/" /usr/lib/os-release'
+      - 'printf "[device]\nwifi.scan-rand-mac-address=yes\n[connection]\nwifi.cloned-mac-address=random\n" > /etc/NetworkManager/conf.d/99-arma-privacy.conf'
+      - 'printf "kernel.kptr_restrict=2\nkernel.dmesg_restrict=1\nnet.ipv4.tcp_syncookies=1\nnet.ipv4.conf.all.accept_redirects=0\n" > /etc/sysctl.d/99-arma-security.conf'
+      - 'printf "  ___________________\n |  _______________  |\n | |   ARMA   OS   | |\n | |   _________   | |\n | |  |  AEGIS  |  | |\n  \\  \\  \\     /  /  /\n   \\  \\  -----  /  /\n    \\  ---------  /\n     -------------\n" > /etc/arma-logo.txt'
+      - 'echo "tty -s && fastfetch --logo /etc/arma-logo.txt" >> /etc/bashrc'
 
+  # 2. Pure PC Security + AI/ML Developer Workstation Stack
   - type: dnf
     install:
       packages:
-        - waydroid
         - usbguard
         - firewalld
-        - kdeconnectd
+        - fastfetch
+        - btop
+        - git
+        - python3
+        - python3-pip
+        - podman-compose
+        - distrobox
+        - neovim
+        - tmux
 
+  # 3. Enable Core PC Security Services on Boot
   - type: systemd
     system:
       enabled:
-        - waydroid-container.service
         - firewalld.service
