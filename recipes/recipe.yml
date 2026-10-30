@@ -18,13 +18,6 @@ modules:
         - firewalld
         - kdeconnectd
 
-  - type: default-flatpaks
-    notify: true
-    system:
-      install:
-        - org.mozilla.firefox
-        - com.github.tchx84.Flatseal
-
   - type: systemd
     system:
       enabled:
