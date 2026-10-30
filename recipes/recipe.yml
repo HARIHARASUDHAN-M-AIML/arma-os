@@ -10,12 +10,13 @@ modules:
       - 'sed -i "s/NAME=.*/NAME=\"ARMA OS\"/" /usr/lib/os-release'
       - 'sed -i "s/PRETTY_NAME=.*/PRETTY_NAME=\"ARMA OS 1.0 (Aegis Edition)\"/" /usr/lib/os-release'
 
-  - type: rpm-ostree
+  - type: dnf
     install:
-      - waydroid
-      - usbguard
-      - firewalld
-      - kde-connect
+      packages:
+        - waydroid
+        - usbguard
+        - firewalld
+        - kdeconnectd
 
   - type: default-flatpaks
     notify: true
