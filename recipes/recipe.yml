@@ -5,24 +5,29 @@ base-image: ghcr.io/ublue-os/kinoite-main
 image-version: latest
 
 modules:
-  # 1. macOS Bootloader, Custom Boot Emblem & Total Fedora Eradication
+  # 1. macOS Boot Sequence, Custom Color Terminal Emblem, & Zero Fedora Traces
   - type: script
     snippets:
-      # Download your official emblem into system directories
+      # Download your official emblem into the system
       - 'curl -sLo /usr/share/pixmaps/arma-logo.png https://raw.githubusercontent.com/HARIHARASUDHAN-M-AIML/arma-os/main/arma-logo.png'
       
-      # macOS Style Boot Screen: Place your emblem in the exact center
+      # 🍎 macOS-Style Boot: Place your emblem in the exact center on pitch-black screen
       - 'cp /usr/share/pixmaps/arma-logo.png /usr/share/plymouth/themes/spinner/bgrt-fallback.png'
       - 'mkdir -p /usr/share/plymouth/themes/bgrt && cp /usr/share/pixmaps/arma-logo.png /usr/share/plymouth/themes/bgrt/bgrt-fallback.png'
       
-      # Destroy the Fedora watermark from the bottom of the boot screen
+      # Destroy Fedora watermark from the bottom of the boot screen
       - 'rm -f /usr/share/plymouth/themes/spinner/watermark.png'
       - 'touch /usr/share/plymouth/themes/spinner/watermark.png'
       
       # Set boot screen to show your emblem instantly (Zero Delay)
       - 'printf "[Daemon]\nTheme=spinner\nShowDelay=0\nDeviceTimeout=8\n" > /etc/plymouth/plymouthd.conf'
       
-      # Lock in your official edition name & eradicate "Fedora" from system identity
+      # 🛡️ Remove Old Shield from Konsole & Render Your New Emblem in Full HD Color via Chafa
+      - 'rm -f /etc/arma-logo.txt'
+      - 'sed -i "/fastfetch/d" /etc/bashrc'
+      - 'echo "tty -s && fastfetch --logo /usr/share/pixmaps/arma-logo.png --logo-type chafa --logo-width 34" >> /etc/bashrc'
+      
+      # Lock in your official edition identity & wipe Fedora release files
       - 'sed -i "s/NAME=.*/NAME=\"ARMA OS\"/" /usr/lib/os-release'
       - 'sed -i "s/PRETTY_NAME=.*/PRETTY_NAME=\"ARMA OS 1.0 (Apex AI-ML Workstation)\"/" /usr/lib/os-release'
       - 'sed -i "s/ID=.*/ID=\"arma-os\"/" /usr/lib/os-release'
@@ -31,28 +36,29 @@ modules:
       - 'echo "ARMA OS 1.0 (Apex AI-ML Workstation)" > /etc/issue'
       - 'echo "ARMA OS 1.0 (Apex AI-ML Workstation)" > /etc/issue.net'
       
-      # Rename GRUB Bootloader Menu & make it fast
+      # Fast & clean GRUB Bootloader Menu
       - 'sed -i "s/GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR=\"ARMA OS (Apex AI-ML)\"/" /etc/default/grub'
       - 'sed -i "s/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=1/" /etc/default/grub'
       
-      # Mac-Style Privacy & Fortress Kernel Defense
+      # Mac-Level Wi-Fi Privacy & Kernel Exploit Protection
       - 'printf "[device]\nwifi.scan-rand-mac-address=yes\n[connection]\nwifi.cloned-mac-address=random\n" > /etc/NetworkManager/conf.d/99-arma-privacy.conf'
       - 'printf "kernel.kptr_restrict=2\nkernel.dmesg_restrict=1\nnet.ipv4.tcp_syncookies=1\nnet.ipv4.conf.all.accept_redirects=0\n" > /etc/sysctl.d/99-arma-security.conf'
-      
-      # Terminal Dashboard: Shows your glowing emblem via Chafa next to system specs
-      - 'echo "tty -s && fastfetch --logo /usr/share/pixmaps/arma-logo.png --logo-type chafa --logo-width 30" >> /etc/bashrc'
 
-  # 2. Package Arsenal: AI/ML Developer Stack + Kali Pentest + System Defense
+  # 2. Package Arsenal: AI/ML Developer Stack + Kali Pentesting + System Defense
   - type: dnf
     install:
       packages:
+        # High-Resolution Terminal Image Renderer
+        - chafa
+        - fastfetch
+        - btop
         # AI/ML Development & Container Stack
         - git
         - python3
         - python3-pip
         - podman-compose
         - distrobox
-        # Kali Ethical Hacking & Security Tools
+        # Kali Ethical Hacking & Reconnaissance Tools
         - nmap
         - wireshark-cli
         - tcpdump
@@ -60,14 +66,11 @@ modules:
         - hydra
         - john
         - socat
-        # System Hardware & Power Tools
+        # Hardware & Network Armor
         - usbguard
         - firewalld
-        - fastfetch
-        - chafa
-        - btop
 
-  # 3. Enable Core Security Services on Boot
+  # 3. Enable Core Security Daemons on Boot
   - type: systemd
     system:
       enabled:
