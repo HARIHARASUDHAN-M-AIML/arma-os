@@ -1,37 +1,49 @@
 name: arma-os
-description: "ARMA OS - AI/ML & High-Security PC Workstation"
+description: "ARMA OS - The Tri-Brid (Mac Security + Windows Compatibility + Kali Pentest)"
 
 base-image: ghcr.io/ublue-os/kinoite-main
 image-version: latest
 
 modules:
-  # 1. Official ARMA OS Branding, Custom Shield Logo & Fortress Security Rules
+  # 1. Download & Embed Your Custom ARMA Emblem Directly Into the OS
   - type: script
     snippets:
+      - 'curl -sLo /usr/share/pixmaps/arma-logo.png https://raw.githubusercontent.com/HARIHARASUDHAN-M-AIML/arma-os/main/arma-logo.png'
       - 'sed -i "s/NAME=.*/NAME=\"ARMA OS\"/" /usr/lib/os-release'
-      - 'sed -i "s/PRETTY_NAME=.*/PRETTY_NAME=\"ARMA OS 1.0 (AI-ML Workstation)\"/" /usr/lib/os-release'
+      - 'sed -i "s/PRETTY_NAME=.*/PRETTY_NAME=\"ARMA OS 1.0 (Apex Edition)\"/" /usr/lib/os-release'
+      - 'echo "ARMA OS 1.0 (Apex Edition)" > /etc/fedora-release'
+      - 'echo "ARMA OS 1.0 (Apex Edition)" > /etc/system-release'
+      - 'rm -f /usr/share/plymouth/themes/spinner/watermark.png'
       - 'printf "[device]\nwifi.scan-rand-mac-address=yes\n[connection]\nwifi.cloned-mac-address=random\n" > /etc/NetworkManager/conf.d/99-arma-privacy.conf'
       - 'printf "kernel.kptr_restrict=2\nkernel.dmesg_restrict=1\nnet.ipv4.tcp_syncookies=1\nnet.ipv4.conf.all.accept_redirects=0\n" > /etc/sysctl.d/99-arma-security.conf'
-      - 'printf "  ___________________\n |  _______________  |\n | |   ARMA   OS   | |\n | |   _________   | |\n | |  |  AEGIS  |  | |\n  \\  \\  \\     /  /  /\n   \\  \\  -----  /  /\n    \\  ---------  /\n     -------------\n" > /etc/arma-logo.txt'
-      - 'echo "tty -s && fastfetch --logo /etc/arma-logo.txt" >> /etc/bashrc'
+      - 'echo "tty -s && fastfetch --logo /usr/share/pixmaps/arma-logo.png --logo-type chafa --logo-width 30" >> /etc/bashrc'
 
-  # 2. Pure PC Security + AI/ML Developer Workstation Stack
+  # 2. Package Arsenal: Kali Pentest + Developer + Windows Tools
   - type: dnf
     install:
       packages:
+        # Kali Ethical Hacking & Recon Tools
+        - nmap
+        - wireshark-cli
+        - tcpdump
+        - aircrack-ng
+        - hydra
+        - john
+        - socat
+        # System & Hardware Power
         - usbguard
         - firewalld
         - fastfetch
+        - chafa
         - btop
+        # AI/ML & Dev Stack
         - git
         - python3
         - python3-pip
         - podman-compose
         - distrobox
-        - neovim
-        - tmux
 
-  # 3. Enable Core PC Security Services on Boot
+  # 3. Enable Core Security Daemons
   - type: systemd
     system:
       enabled:
